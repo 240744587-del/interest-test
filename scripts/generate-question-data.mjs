@@ -4,7 +4,7 @@ import { parseQuestionBank } from "./lib/question-parser.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const sourcePath = path.join(root, "question-bank-v2.md");
-const outputPath = path.join(root, "src/data/questions/generated.ts");
+const outputPath = path.join(root, "app/src/data/questions/generated.ts");
 const markdown = fs.readFileSync(sourcePath, "utf8");
 const questionBanks = parseQuestionBank(markdown);
 

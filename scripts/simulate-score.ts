@@ -1,6 +1,9 @@
-import { questionBanks } from "../src/data/questions/generated";
-import { scoreAssessment } from "../src/domain/assessment/score";
-import type { Answer, Question } from "../src/domain/assessment/types";
+import { questionBanks } from "../app/src/data/questions/generated";
+import { scoreAssessment } from "../app/src/domain/assessment/score";
+import type {
+  Answer,
+  Question,
+} from "../app/src/domain/assessment/types";
 
 function answerQuestion(question: Question): Answer {
   if (question.type === "single") {
