@@ -1,12 +1,12 @@
-import { L1QuestionBank } from './L1-children';
+import { questionBanks } from '@/data/questions/generated';
+import { buildUiQuestionBank } from './adapter';
 import type { Level, QuestionBank } from './types';
 
-// L2-L4 题库后续补充，先用占位
 const banks: Record<Level, QuestionBank> = {
-  L1: L1QuestionBank,
-  L2: { level: 'L2', questions: [], estimatedMinutes: 15 },
-  L3: { level: 'L3', questions: [], estimatedMinutes: 20 },
-  L4: { level: 'L4', questions: [], estimatedMinutes: 25 },
+  L1: buildUiQuestionBank('L1', questionBanks.L1),
+  L2: buildUiQuestionBank('L2', questionBanks.L2),
+  L3: buildUiQuestionBank('L3', questionBanks.L3),
+  L4: buildUiQuestionBank('L4', questionBanks.L4),
 };
 
 export function getQuestionBank(level: Level): QuestionBank {

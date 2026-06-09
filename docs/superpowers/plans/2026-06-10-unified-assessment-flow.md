@@ -164,13 +164,14 @@ Copy only display data:
     text: option.text,
     scores: [],
   })),
-  likertStatement:
-    question.type === "likert" ? question.prompt : undefined,
+  likertStatement: undefined,
   reversed: question.reverse,
 }
 ```
 
 Do not copy or translate score rules into the UI adapter. The domain scorer continues using the generated source questions.
+Generated Likert questions contain only one prompt, so the adapter leaves
+`likertStatement` empty to avoid rendering the same text twice.
 
 Use these estimated times:
 
