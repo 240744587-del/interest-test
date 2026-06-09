@@ -2,7 +2,8 @@
 
 > 状态：已确认，作为 MVP 开发的唯一权威规格
 > 确认日期：2026-06-09
-> 来源文档：`MVP.md`、`assessment-framework.md`、`question-bank.md`、`question-bank-supplement.md`
+> 最终题库：`question-bank-v2.md`
+> 来源文档：`docs/archive/` 中的四份历史方案
 
 ---
 
@@ -11,9 +12,9 @@
 本文件统一现有四份方案文档中的产品边界、题库版本、评分口径、隐私规则和开发契约。
 
 - 开发、测试和验收以本文件为准。
-- 原有四份文档保留为理论、题目和设计来源，不直接修改。
+- 题目内容和计分标注以 `question-bank-v2.md` 为准。
+- 原有四份文档归档在 `docs/archive/`，仅用于历史追溯，不直接修改。
 - 原有文档与本文件冲突时，以本文件为准。
-- 本文件没有明确覆盖的题目内容，依次参考 `question-bank-supplement.md` 和 `question-bank.md`。
 
 ## 2. 产品定义
 
@@ -83,7 +84,7 @@ MVP 不设置开放文本题，不允许用户输入自由文本。
 
 ### 5.1 题量
 
-最终题库由 `question-bank.md` 的 v1.0 题目与 `question-bank-supplement.md` 的 v2.0 替换、增补规则合并而成。
+最终题目以 `question-bank-v2.md` 为唯一依据。该文件由 `docs/archive/question-bank-v1.md` 与 `docs/archive/question-bank-supplement-v2.md` 按已确认规则合并生成。
 
 | 层级 | v2.0 原汇总 | 删除开放题 | MVP 最终题量 |
 |------|-------------|------------|--------------|
