@@ -568,8 +568,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L1-RIASEC-001",
       "level": "L1",
       "number": 15,
-      "type": "ranking",
-      "prompt": "如果可以加入一个超酷的课外小组，你最想去哪个？给它们排个顺序（1=最想，4=最不想）：",
+      "type": "single",
+      "prompt": "如果可以加入一个超酷的课外小组，你最想去哪个？",
       "options": [
         {
           "id": "A",
@@ -577,7 +577,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.I",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -587,7 +587,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.A",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -597,7 +597,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.S",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -607,12 +607,12 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.E",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n如果可以加入一个超酷的课外小组，你最想去哪个？给它们排个顺序（1=最想，4=最不想）：\n- A. 科学实验小组（做实验、拆东西、研究为什么） → [I 探究型] 排序计分\n- B. 戏剧/绘画/音乐小组（创作和表演） → [A 艺术型] 排序计分\n- C. 志愿者/心理小组（帮助别人、倾听别人的故事） → [S 社会型] 排序计分\n- D. 商业/辩论小组（模拟做老板、打比赛） → [E 企业型] 排序计分"
+      "sourceMarkdown": "（场景选择）\n如果可以加入一个超酷的课外小组，你最想去哪个？\n- A. 科学实验小组（做实验、拆东西、研究为什么） → [I 探究型] +3\n- B. 戏剧/绘画/音乐小组（创作和表演） → [A 艺术型] +3\n- C. 志愿者/心理小组（帮助别人、倾听别人的故事） → [S 社会型] +3\n- D. 商业/辩论小组（模拟做老板、打比赛） → [E 企业型] +3"
     },
     {
       "id": "L1-RIASEC-002",
@@ -932,8 +932,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L1-DRIVE-001",
       "level": "L1",
       "number": 23,
-      "type": "ranking",
-      "prompt": "长大后，你觉得下面哪个最重要？排个顺序（1=最重要）：",
+      "type": "single",
+      "prompt": "长大后，你觉得下面哪个最重要？",
       "options": [
         {
           "id": "A",
@@ -941,7 +941,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.creation",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -951,7 +951,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.exploration",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -961,7 +961,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.connection",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -971,12 +971,12 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.influence",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n长大后，你觉得下面哪个最重要？排个顺序（1=最重要）：\n- A. 做出一个很酷的作品（游戏/书/建筑/产品） → [创造驱动] 排序计分\n- B. 搞明白世界上还没人搞明白的事 → [探索驱动] 排序计分\n- C. 帮到很多人，被需要 → [连接驱动] 排序计分\n- D. 成为很厉害的人，很多人认识你 → [影响驱动] 排序计分"
+      "sourceMarkdown": "（场景选择）\n长大后，你觉得下面哪个最重要？\n- A. 做出一个很酷的作品（游戏/书/建筑/产品） → [创造驱动] +3\n- B. 搞明白世界上还没人搞明白的事 → [探索驱动] +3\n- C. 帮到很多人，被需要 → [连接驱动] +3\n- D. 成为很厉害的人，很多人认识你 → [影响驱动] +3"
     },
     {
       "id": "L1-DRIVE-002",
@@ -1923,8 +1923,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L2-RIASEC-009",
       "level": "L2",
       "number": 27,
-      "type": "ranking",
-      "prompt": "这些未来的\"一天\"，你最向往哪个？（排序）",
+      "type": "single",
+      "prompt": "这些未来的\"一天\"，你最向往哪个？",
       "options": [
         {
           "id": "A",
@@ -1932,11 +1932,11 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.R",
-              "value": 1
+              "value": 3
             },
             {
               "key": "riasec.I",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -1946,7 +1946,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.A",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -1956,7 +1956,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.S",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -1966,16 +1966,16 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "riasec.E",
-              "value": 1
+              "value": 3
             },
             {
               "key": "riasec.C",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n这些未来的\"一天\"，你最向往哪个？（排序）\n- A. 在实验室里测试一个新材料的性能 → [R+I]\n- B. 在工作室里创作一幅大型壁画 → [A]\n- C. 在学校里给一群孩子上一堂有趣的课 → [S]\n- D. 在办公室里和团队讨论一个新产品的发布计划 → [E+C]"
+      "sourceMarkdown": "（场景选择）\n这些未来的\"一天\"，你最向往哪个？\n- A. 在实验室里测试一个新材料的性能 → [R+I] +3\n- B. 在工作室里创作一幅大型壁画 → [A] +3\n- C. 在学校里给一群孩子上一堂有趣的课 → [S] +3\n- D. 在办公室里和团队讨论一个新产品的发布计划 → [E+C] +3"
     },
     {
       "id": "L2-RIASEC-010",
@@ -2015,8 +2015,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L2-DRIVE-001",
       "level": "L2",
       "number": 29,
-      "type": "ranking",
-      "prompt": "什么会让你觉得\"人生值了\"？排序：",
+      "type": "single",
+      "prompt": "什么会让你觉得\"人生值了\"？",
       "options": [
         {
           "id": "A",
@@ -2024,7 +2024,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.creation",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -2034,7 +2034,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.exploration",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -2044,7 +2044,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.connection",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -2054,12 +2054,12 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.influence",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n什么会让你觉得\"人生值了\"？排序：\n- A. 创造了一个被很多人使用/喜爱的作品 → [创造驱动]\n- B. 解开了一个长久以来没人解开的谜题 → [探索驱动]\n- C. 深深地影响和改变了一些人的生活 → [连接驱动]\n- D. 成为一个领域的权威/领导者 → [影响驱动]"
+      "sourceMarkdown": "（场景选择）\n什么会让你觉得\"人生值了\"？\n- A. 创造了一个被很多人使用/喜爱的作品 → [创造驱动] +3\n- B. 解开了一个长久以来没人解开的谜题 → [探索驱动] +3\n- C. 深深地影响和改变了一些人的生活 → [连接驱动] +3\n- D. 成为一个领域的权威/领导者 → [影响驱动] +3"
     },
     {
       "id": "L2-DRIVE-002",
@@ -3298,8 +3298,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L3-DRIVE-001",
       "level": "L3",
       "number": 30,
-      "type": "ranking",
-      "prompt": "什么会让你觉得这辈子值了？排序：",
+      "type": "single",
+      "prompt": "什么会让你觉得这辈子值了？",
       "options": [
         {
           "id": "A",
@@ -3307,7 +3307,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.creation",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -3317,7 +3317,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.exploration",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -3327,7 +3327,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.connection",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -3337,12 +3337,12 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.influence",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n什么会让你觉得这辈子值了？排序：\n- A. 做出了一个被世人记住的作品或发明 → [创造驱动]\n- B. 搞清楚了某个困扰人类的谜题 → [探索驱动]\n- C. 深刻地改变了一群人的生活 → [连接驱动]\n- D. 在某个领域拥有了巨大的影响力和话语权 → [影响驱动]"
+      "sourceMarkdown": "（场景选择）\n什么会让你觉得这辈子值了？\n- A. 做出了一个被世人记住的作品或发明 → [创造驱动] +3\n- B. 搞清楚了某个困扰人类的谜题 → [探索驱动] +3\n- C. 深刻地改变了一群人的生活 → [连接驱动] +3\n- D. 在某个领域拥有了巨大的影响力和话语权 → [影响驱动] +3"
     },
     {
       "id": "L3-DRIVE-002",
@@ -4733,8 +4733,8 @@ export const questionBanks: Record<Level, Question[]> = {
       "id": "L4-DRIVE-001",
       "level": "L4",
       "number": 32,
-      "type": "ranking",
-      "prompt": "临终回顾，什么让你觉得\"没白活\"？排序：",
+      "type": "single",
+      "prompt": "临终回顾，什么让你觉得\"没白活\"？",
       "options": [
         {
           "id": "A",
@@ -4742,7 +4742,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.creation",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -4752,7 +4752,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.exploration",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -4762,7 +4762,7 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.connection",
-              "value": 1
+              "value": 3
             }
           ]
         },
@@ -4772,12 +4772,12 @@ export const questionBanks: Record<Level, Question[]> = {
           "scores": [
             {
               "key": "drive.influence",
-              "value": 1
+              "value": 3
             }
           ]
         }
       ],
-      "sourceMarkdown": "（排序题）\n临终回顾，什么让你觉得\"没白活\"？排序：\n- A. 留下了被世人使用或欣赏的作品/发明 → [创造驱动]\n- B. 解开了人类未曾破解的谜题 → [探索驱动]\n- C. 深刻地改变了一些人的生命轨迹 → [连接驱动]\n- D. 拥有了真正的影响力，推动了社会变化 → [影响驱动]"
+      "sourceMarkdown": "（场景选择）\n临终回顾，什么让你觉得\"没白活\"？\n- A. 留下了被世人使用或欣赏的作品/发明 → [创造驱动] +3\n- B. 解开了人类未曾破解的谜题 → [探索驱动] +3\n- C. 深刻地改变了一些人的生命轨迹 → [连接驱动] +3\n- D. 拥有了真正的影响力，推动了社会变化 → [影响驱动] +3"
     },
     {
       "id": "L4-DRIVE-002",

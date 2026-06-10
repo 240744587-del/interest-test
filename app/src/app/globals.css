@@ -125,6 +125,85 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.8 0 0);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0 0);
+}
+
+/* 拖拽排序触摸优化 */
+.touch-none {
+  touch-action: none;
+}
+
+/* ====== 打印/PDF 导出样式 ====== */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 隐藏非报告元素 */
+  .no-print {
+    display: none !important;
+  }
+
+  /* 报告区域全宽 */
+  main {
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  main > div {
+    max-width: 100% !important;
+    padding: 20px !important;
+  }
+
+  /* 卡片去阴影边框，省墨 */
+  section {
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    margin-bottom: 12px !important;
+  }
+
+  /* 渐变背景改纯色 */
+  .bg-gradient-to-b,
+  .bg-gradient-to-r {
+    background: white !important;
+  }
+
+  /* 确保文字颜色可见 */
+  .text-gray-600 {
+    color: #374151 !important;
+  }
+
+  /* 页脚信息 */
+  @page {
+    margin: 15mm;
+    size: A4;
+  }
+}
+
+/* 量表题移动端优化 */
+@media (max-width: 420px) {
+  .likert-grid {
+    gap: 4px;
+  }
+  .likert-grid .likert-label {
+    display: none;
   }
 }

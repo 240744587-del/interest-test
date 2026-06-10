@@ -9,7 +9,8 @@ interface Props {
   onSelect: (value: AnswerValue) => void;
 }
 
-const labels = ['完全不像我', '不太像我', '有点像我', '比较像我', '非常像我'];
+const labels = ['完全不像我', '不太像我', '说不好', '比较像我', '非常像我'];
+const emojis = ['😐', '🤔', '😶', '🙂', '😄'];
 
 export function LikertScale({ question, selected, onSelect }: Props) {
   return (
@@ -23,33 +24,54 @@ export function LikertScale({ question, selected, onSelect }: Props) {
           &ldquo;{question.likertStatement}&rdquo;
         </p>
       )}
-      <div className="flex justify-between gap-2 px-1">
-        {[1, 2, 3, 4, 5].map((val) => {
-          const isSelected = selected === val;
-          return (
-            <button
-              key={val}
-              onClick={() => onSelect({ kind: 'likert', value: val as 1 | 2 | 3 | 4 | 5 })}
-              className={`
-                flex-1 flex flex-col items-center gap-2 py-3 px-1 rounded-xl border-2 transition-all
-                ${isSelected
-                  ? 'border-blue-500 bg-blue-50 scale-105 shadow-md'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
-                }
-              `}
-            >
-              <span className={`
-                w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold
-                ${isSelected ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}
-              `}>
-                {val}
-              </span>
-              <span className="text-xs text-gray-500 text-center leading-tight">
-                {labels[val - 1]}
-              </span>
-            </button>
-          );
-        })}
+
+      {/* 刻度条样式 - 移动端友好 */}
+      <div className="space-y-3">
+        <div className="flex justify-between gap-1.5 sm:gap-2 px-0.5">
+          {[1, 2, 3, 4, 5].map((val) => {
+            const isSelected = selected === val;
+            return (
+              <button
+                key={val}
+                onClick={() => onSelect({ kind: 'likert', value: val as 1 | 2 | 3 | 4 | 5 })}
+                className={`
+                  flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 px-1 rounded-xl border-2 transition-all duration-200
+                  ${isSelected
+                    ? 'border-blue-500 bg-blue-50 scale-[1.05] shadow-md shadow-blue-100'
+                    : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'
+                  }
+                `}
+              >
+                <span className="text-xl sm:text-2xl">{emojis[val - 1]}</span>
+                <span className={`
+                  text-[10px] sm:text-xs text-center leading-tight font-medium
+                  ${isSelected ? 'text-blue-600' : 'text-gray-400'}
+                `}>
+                  {labels[val - 1]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 滑动提示条 */}
+        <div className="relative h-1.5 bg-gray-100 rounded-full mx-2">
+          <div className="absolute inset-0 flex">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex-1 flex items-center justify-center">
+                <div className={`w-1.5 h-1.5 rounded-full ${selected === i + 1 ? 'bg-blue-500' : 'bg-gray-300'}`} />
+              </div>
+            ))}
+          </div>
+          {selected && (
+            <motion.div
+              className="absolute top-0 h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${((selected - 1) / 4) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          )}
+        </div>
       </div>
     </motion.div>
   );

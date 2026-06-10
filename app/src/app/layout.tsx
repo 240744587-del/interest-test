@@ -3,8 +3,8 @@ import { ResultProvider } from "@/components/assessment/ResultStore";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "探路者 — 兴趣探索与职业方向启蒙测评",
-  description: "基于霍兰德、荣格、加德纳、舒伯等理论，帮助你发现兴趣种子和能力倾向",
+  title: "向野 — 成长方向探索",
+  description: "基于霍兰德、荣格、加德纳、舒伯等理论，帮助你发现兴趣种子和能力倾向，探索属于自己的成长方向",
 };
 
 export default function RootLayout({
