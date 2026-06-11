@@ -175,6 +175,10 @@ export default function Home() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-amber-400 mt-1.5 shrink-0">•</span>
+              <span>AI 解读完全可选；仅在主动点击后，匿名汇总分会发送给第三方 AI 服务</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
               <span>小学生和初中生请在家长知情下使用</span>
             </li>
           </ul>

@@ -6,25 +6,63 @@
 import OpenAI from 'openai';
 import { buildSystemPrompt, buildUserMessage } from '@/lib/report/prompt';
 import { generateTemplateReport } from '@/lib/report/template';
-import type { AIReport } from '@/lib/report/types';
-import type { ReportRequest } from '@/lib/questions/types';
+import {
+  MAX_REPORT_BODY_BYTES,
+  createRateLimiter,
+  isAllowedOrigin,
+  parseReportRequest,
+} from '@/lib/report/request';
+import {
+  parseAIReport,
+  shouldForceTemplateReport,
+} from '@/lib/report/response';
 
 const TIMEOUT_MS = 60_000;
+const reportLimiter = createRateLimiter({
+  limit: 5,
+  windowMs: 10 * 60_000,
+});
+
+function getClientKey(request: Request): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as ReportRequest;
+    if (!isAllowedOrigin(request)) {
+      return Response.json({ ok: false, error: '不允许的请求来源' }, { status: 403 });
+    }
+
+    const contentType = request.headers.get('content-type') ?? '';
+    if (!contentType.toLowerCase().startsWith('application/json')) {
+      return Response.json({ ok: false, error: '请求格式不正确' }, { status: 415 });
+    }
+
+    const contentLength = Number(request.headers.get('content-length'));
+    if (
+      Number.isFinite(contentLength) &&
+      contentLength > MAX_REPORT_BODY_BYTES
+    ) {
+      return Response.json({ ok: false, error: '请求内容过大' }, { status: 413 });
+    }
+
+    if (!reportLimiter.consume(getClientKey(request))) {
+      return Response.json(
+        { ok: false, error: '请求过于频繁，请稍后再试' },
+        { status: 429, headers: { 'Retry-After': '600' } },
+      );
+    }
+
+    const body = parseReportRequest(await request.text());
     const { level, summary } = body;
 
-    if (
-      !level ||
-      !summary ||
-      !['L1', 'L2', 'L3', 'L4'].includes(level) ||
-      !Array.isArray(summary.dimensions) ||
-      typeof summary.riasec?.code !== 'string' ||
-      typeof summary.jung?.EI !== 'number'
-    ) {
-      return Response.json({ ok: false, error: '无效的请求参数' }, { status: 400 });
+    if (shouldForceTemplateReport(summary)) {
+      const report = generateTemplateReport(level, summary);
+      return Response.json({ ok: true, report, fallback: true });
     }
 
     const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -65,23 +103,7 @@ export async function POST(request: Request) {
       const text = completion.choices[0]?.message?.content;
       if (!text) throw new Error('AI 返回内容为空');
 
-      const report = JSON.parse(text) as AIReport;
-
-      const requiredFields: (keyof AIReport)[] = [
-        'overview',
-        'interestInterpretation',
-        'abilityInterpretation',
-        'cognitiveInterpretation',
-        'driveInterpretation',
-        'explorationSuggestions',
-        'actionSteps',
-      ];
-
-      for (const field of requiredFields) {
-        if (typeof report[field] !== 'string' || report[field]!.length < 10) {
-          throw new Error(`AI 报告字段 ${field} 无效`);
-        }
-      }
+      const report = parseAIReport(text, level);
 
       console.info('[report] AI report generated successfully');
       return Response.json({ ok: true, report, fallback: false });
@@ -96,7 +118,20 @@ export async function POST(request: Request) {
       return Response.json({ ok: true, report, fallback: true });
     }
   } catch (outerError) {
-    console.error('[report] Request failed:', outerError instanceof Error ? outerError.message : 'unknown');
-    return Response.json({ ok: false, error: '报告生成失败，请重试' }, { status: 500 });
+    const message =
+      outerError instanceof Error ? outerError.message : '报告生成失败，请重试';
+    const status =
+      message === '请求内容过大'
+        ? 413
+        : message === '无效的请求参数' || message === '教育阶段不一致'
+          ? 400
+          : 500;
+    if (status === 500) {
+      console.error('[report] Request failed:', message);
+    }
+    return Response.json(
+      { ok: false, error: status === 500 ? '报告生成失败，请重试' : message },
+      { status },
+    );
   }
 }

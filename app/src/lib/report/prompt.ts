@@ -14,10 +14,8 @@ function buildWhitelistedInput(level: Level, summary: ScoreResult) {
     // 各维度及子维度的汇总分
     dimensions: summary.dimensions.map((d) => ({
       key: d.key,
-      label: d.label,
       subScores: d.subScores.map((s) => ({
         key: s.key,
-        label: s.label,
         score: s.score,
       })),
     })),
@@ -45,8 +43,6 @@ function buildWhitelistedInput(level: Level, summary: ScoreResult) {
       : undefined,
     // 一致性标记
     consistencyFlags: summary.consistencyFlags,
-    // 本地规则选出的候选领域
-    candidateFields: summary.candidateFields,
   };
 }
 
@@ -67,6 +63,7 @@ ${tone}
 4. 鼓励通过真实活动验证这些倾向。
 ${isMinor ? '5. 不做确定性的职业推荐，只提供探索方向。' : '5. 职业方向仅作参考，鼓励结合真实体验验证。'}
 6. 明确产品不构成心理诊断、升学或职业决策意见。
+7. 低证据保护：若 consistencyFlags 包含 "low-evidence"，说明用户跳过了较多题目或有效信号不足。此时必须明确告知用户处于"开放探索期"，不给出精确的类型结论或领域推荐，把重点放在"如何获得真实体验"上——基于不足的证据下精准结论是误导。
 
 ## 绝对禁止
 - 输出人格诊断、心理疾病或健康判断

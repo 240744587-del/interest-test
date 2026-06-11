@@ -16,6 +16,11 @@ import { levelMeta } from '@/lib/questions';
 import type { AIReport, ReportAPIResponse, ReportStatus } from '@/lib/report/types';
 import { generateTemplateReport } from '@/lib/report/template';
 import { useResultStore } from '@/components/assessment/ResultStore';
+import {
+  canRequestAIReport,
+  canShowDetailedCharts,
+  resolveReportStatus,
+} from '@/components/assessment/result-state';
 
 export default function ResultPage() {
   const { result, clearResult } = useResultStore();
@@ -27,7 +32,7 @@ export default function ResultPage() {
   );
 
   const requestAIReport = useCallback(async () => {
-    if (!result) return;
+    if (!result || !canRequestAIReport(result)) return;
     setReportStatus({ kind: 'loading' });
 
     try {
@@ -37,11 +42,7 @@ export default function ResultPage() {
         body: JSON.stringify({ level: result.level, summary: result }),
       });
       const data = (await res.json()) as ReportAPIResponse;
-      if (data.ok && data.report) {
-        setReportStatus({ kind: 'done', report: data.report });
-      } else {
-        setReportStatus({ kind: 'error', message: data.error || '生成失败' });
-      }
+      setReportStatus(resolveReportStatus(data));
     } catch {
       setReportStatus({ kind: 'error', message: '网络错误，请稍后重试' });
     }
@@ -65,6 +66,8 @@ export default function ResultPage() {
     reportStatus.kind === 'done' ? reportStatus.report : localReport;
   const isAI = reportStatus.kind === 'done';
   const meta = levelMeta[result.level];
+  const showDetailedCharts = canShowDetailedCharts(result);
+  const showAIEnhancement = canRequestAIReport(result);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/20 pb-16">
@@ -80,11 +83,17 @@ export default function ResultPage() {
           <p className="text-sm text-gray-400 mb-2">{meta.emoji} {meta.label}版测评报告</p>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">你的探索画像</h1>
 
-          {/* 兴趣代码快速摘要 */}
-          <div className="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
-            <span className="text-sm text-gray-500">兴趣代码</span>
-            <span className="font-mono text-xl font-bold text-blue-600 tracking-wider">{result.riasec.code}</span>
-          </div>
+          {/* 兴趣代码快速摘要 — 低证据时不展示精确代码，避免虚假精准 */}
+          {result.consistencyFlags.includes('low-evidence') ? (
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-100">
+              <span className="text-sm text-amber-700">🌱 开放探索期</span>
+            </div>
+          ) : (
+            <div className="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
+              <span className="text-sm text-gray-500">兴趣代码</span>
+              <span className="font-mono text-xl font-bold text-blue-600 tracking-wider">{result.riasec.code}</span>
+            </div>
+          )}
         </motion.div>
       </div>
 
@@ -94,7 +103,7 @@ export default function ResultPage() {
         <ReportSections report={activeReport} />
 
         {/* ====== AI 增强入口 ====== */}
-        {reportStatus.kind === 'idle' && (
+        {showAIEnhancement && reportStatus.kind === 'idle' && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +121,7 @@ export default function ResultPage() {
               </div>
               <button
                 onClick={requestAIReport}
-                className="px-4 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:from-violet-600 hover:to-blue-600 transition-all shadow-lg shadow-violet-200/50 active:scale-95 shrink-0"
+                className="px-4 py-2.5 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-xl text-sm font-medium hover:from-violet-600 hover:to-blue-600 transition-all shadow-lg shadow-violet-200/50 active:scale-95 shrink-0"
               >
                 AI 解读
               </button>
@@ -138,6 +147,12 @@ export default function ResultPage() {
           </motion.div>
         )}
 
+        {reportStatus.kind === 'fallback' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-blue-50 rounded-xl border border-blue-100 no-print">
+            <span className="text-sm text-blue-700">{reportStatus.message}</span>
+          </motion.div>
+        )}
+
         {/* AI 标记 */}
         {isAI && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-violet-50 border border-violet-100 w-fit">
@@ -149,7 +164,8 @@ export default function ResultPage() {
         )}
 
         {/* ====== 数据图表（折叠） ====== */}
-        <div className="border border-gray-100 rounded-2xl overflow-hidden no-print">
+        {showDetailedCharts && (
+          <div className="border border-gray-100 rounded-2xl overflow-hidden no-print">
           <button
             onClick={() => setShowCharts((v) => !v)}
             className="w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gray-50 transition-colors"
@@ -179,7 +195,8 @@ export default function ResultPage() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+          </div>
+        )}
 
         {/* 免责声明 */}
         <div className="bg-gray-50 rounded-xl p-4 text-xs text-gray-400 leading-relaxed space-y-1">

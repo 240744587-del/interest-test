@@ -134,6 +134,27 @@ const subScoreLabels: Record<string, string> = {
 
 const riasecKeys = ["R", "I", "A", "S", "E", "C"] as const;
 
+const readinessPositiveKeys = new Set([
+  "readiness.self_awareness",
+  "readiness.ability_awareness",
+  "readiness.career_information",
+  "readiness.path_information",
+  "readiness.decision_ability",
+  "readiness.decision_maturity",
+  "readiness.decision_independence",
+  "readiness.realism",
+  "readiness.flexibility",
+  "readiness.career_adaptability",
+  "readiness.transition_readiness",
+  "readiness.exploration_action",
+  "readiness.high_maturity",
+  "readiness.future_awareness",
+  "readiness.interest_clarity",
+  "readiness.interest_ability_clarity",
+  "readiness.direction_fit",
+  "readiness.authenticity",
+]);
+
 const fieldMapping: Record<string, string[]> = {
   RI: ["工程技术", "软件开发", "建筑设计"],
   IR: ["科学研究", "数据分析", "机械工程"],
@@ -253,19 +274,50 @@ function buildReadiness(score: AssessmentScore) {
     key.startsWith("readiness."),
   );
   const subScores = Object.fromEntries(entries);
+  const positiveEntries = entries.filter(([key]) =>
+    readinessPositiveKeys.has(key),
+  );
   const overall =
-    entries.length === 0
+    positiveEntries.length === 0
       ? 0
       : Math.round(
-          entries.reduce((total, [, value]) => total + value, 0) /
-            entries.length,
+          positiveEntries.reduce((total, [, value]) => total + value, 0) /
+            positiveEntries.length,
         );
 
   return { overall, subScores };
 }
 
+/**
+ * 低证据保护：跳过比例过高或可用信号过少时打标记，
+ * 报告层据此降级为"开放探索期"表述，不生成虚假精准结论。
+ */
+function detectLowEvidence(score: AssessmentScore): boolean {
+  const total = score.answeredCount + score.skippedCount;
+  if (total === 0) return true;
+  if (score.skippedCount / total > 1 / 3) return true;
+  if (
+    Object.values(score.evidenceByDimension).some(
+      ({ answered, skipped }) => answered === 0 && skipped > 0,
+    )
+  ) {
+    return true;
+  }
+
+  const usableSignals = Object.values(score.normalizedScores).filter(
+    (value) => value > 0,
+  );
+  return usableSignals.length < 3;
+}
+
 export function buildScoreResult(score: AssessmentScore): ScoreResult {
+  const lowEvidence = detectLowEvidence(score);
   const riasec = buildRIASEC(score.normalizedScores);
+  const hasRIASECEvidence =
+    (score.evidenceByDimension.riasec?.answered ?? 0) > 0;
+  if (!hasRIASECEvidence && score.evidenceByDimension.riasec?.skipped) {
+    riasec.code = "";
+  }
 
   return {
     level: score.level,
@@ -273,7 +325,10 @@ export function buildScoreResult(score: AssessmentScore): ScoreResult {
     jung: buildJung(score.normalizedScores),
     riasec,
     readiness: buildReadiness(score),
-    consistencyFlags: [],
-    candidateFields: fieldMapping[riasec.code.slice(0, 2)] ?? [],
+    consistencyFlags: lowEvidence ? ["low-evidence"] : [],
+    candidateFields:
+      lowEvidence || riasec.code.length < 2
+        ? []
+        : fieldMapping[riasec.code.slice(0, 2)] ?? [],
   };
 }

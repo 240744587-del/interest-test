@@ -102,6 +102,16 @@ describe("buildScoreResult", () => {
         "readiness.self_awareness": 40,
         "readiness.career_information": 60,
       },
+      answeredCount: 46,
+      skippedCount: 0,
+      evidenceByDimension: {
+        energy: { answered: 2, skipped: 0 },
+        intelligence: { answered: 1, skipped: 0 },
+        riasec: { answered: 6, skipped: 0 },
+        drive: { answered: 1, skipped: 0 },
+        jung: { answered: 4, skipped: 0 },
+        readiness: { answered: 2, skipped: 0 },
+      },
     };
 
     const report: ScoreResult = buildScoreResult(score);
@@ -153,5 +163,49 @@ describe("buildScoreResult", () => {
       "博物馆管理",
     ]);
     expect(report.consistencyFlags).toEqual([]);
+  });
+
+  it("does not count diagnostic readiness signals as positive readiness", () => {
+    const report = buildScoreResult({
+      level: "L3",
+      rawScores: {},
+      ranges: {},
+      normalizedScores: {
+        "readiness.decision_support_needed": 100,
+        "readiness.direction_mismatch": 100,
+        "readiness.undifferentiated": 100,
+        "readiness.self_awareness": 60,
+      },
+      answeredCount: 53,
+      skippedCount: 0,
+      evidenceByDimension: {
+        readiness: { answered: 4, skipped: 0 },
+      },
+    });
+
+    expect(report.readiness?.overall).toBe(60);
+  });
+
+  it("marks a report low-evidence when an entire measured dimension is skipped", () => {
+    const report = buildScoreResult({
+      level: "L1",
+      rawScores: {},
+      ranges: {},
+      normalizedScores: {
+        "energy.social": 80,
+        "intelligence.logical": 70,
+      },
+      answeredCount: 24,
+      skippedCount: 8,
+      evidenceByDimension: {
+        riasec: { answered: 0, skipped: 8 },
+        energy: { answered: 6, skipped: 0 },
+        intelligence: { answered: 8, skipped: 0 },
+      },
+    });
+
+    expect(report.consistencyFlags).toContain("low-evidence");
+    expect(report.riasec.code).toBe("");
+    expect(report.candidateFields).toEqual([]);
   });
 });

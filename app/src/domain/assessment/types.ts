@@ -60,7 +60,9 @@ export type AnswerValue =
       kind: "forcedChoice";
       mostOptionId: string;
       leastOptionId?: string;
-    };
+    }
+  // "不知道 / 没经历过 / 都不像"：有效答案，不参与计分
+  | { kind: "skip" };
 
 export interface Answer {
   questionId: string;

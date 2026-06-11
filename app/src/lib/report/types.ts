@@ -36,6 +36,7 @@ export type ReportStatus =
   | { kind: 'loading' }
   | { kind: 'streaming'; partial: Partial<AIReport> }
   | { kind: 'done'; report: AIReport }
+  | { kind: 'fallback'; message: string }
   | { kind: 'error'; message: string }
   | { kind: 'opted-out' };
 

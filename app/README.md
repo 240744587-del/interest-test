@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 向野兴趣探索测评
 
-## Getting Started
+基于统一 v2 题库的分龄兴趣与成长方向探索工具，支持 L1 小学、L2 初中、L3 高中、L4 大学及以上。
 
-First, run the development server:
+## 隐私边界
+
+- 不要求注册，不收集姓名、学校等身份信息。
+- 答案和结果只保存在当前页面内存中，不写入浏览器持久化存储或数据库。
+- 不建立个人档案、样本库或常模库。
+- AI 解读由用户主动选择，只发送匿名汇总分数；不发送逐题答案。
+- 未配置 AI 密钥或 AI 调用失败时，自动使用本地模板报告。
+
+## 本地运行
+
+需要 Node.js 20.9 或更高版本。
 
 ```bash
+npm ci
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`DEEPSEEK_API_KEY` 是可选配置。留空时所有报告均使用本地模板。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 上线前验证
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+npm audit --omit=dev
+```
 
-## Learn More
+## Vercel 部署
 
-To learn more about Next.js, take a look at the following resources:
+1. 导入 GitHub 仓库 `240744587-del/interest-test`。
+2. 将 Root Directory 设置为 `app`。
+3. Framework Preset 选择 Next.js，其余构建命令使用默认值。
+4. 如需 AI 解读，在环境变量中配置 `DEEPSEEK_API_KEY`；不配置也可正常上线。
+5. 部署后分别检查首页、四个教育阶段入口、完整答题、低证据报告和 `/api/report`。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+正式公开面向未成年人前，仍需对未成年人使用流程、第三方 AI 数据处理和隐私文本完成专项合规评估。

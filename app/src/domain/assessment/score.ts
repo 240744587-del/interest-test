@@ -18,9 +18,29 @@ export interface AssessmentScore {
   rawScores: Record<string, number>;
   ranges: Record<string, ScoreRange>;
   normalizedScores: Record<string, number>;
+  /** 实际计分的题数（不含跳过） */
+  answeredCount: number;
+  /** 选择"不知道 / 没经历过"的题数 */
+  skippedCount: number;
+  /** 各评分维度实际获得的作答证据 */
+  evidenceByDimension: Record<
+    string,
+    { answered: number; skipped: number }
+  >;
 }
 
 type Contribution = Record<string, number>;
+
+function questionDimensions(question: Question): string[] {
+  const keys = [
+    ...question.options.flatMap((option) =>
+      option.scores.map((target) => target.key),
+    ),
+    ...(question.likertScores ?? []).map((target) => target.key),
+  ];
+
+  return [...new Set(keys.map((key) => key.split(".")[0]))];
+}
 
 export function scoreReverseLikert(value: 1 | 2 | 3 | 4 | 5) {
   return (6 - value) as 1 | 2 | 3 | 4 | 5;
@@ -54,6 +74,7 @@ function validateKind(question: Question, answer: AnswerValue) {
 }
 
 function scoreQuestion(question: Question, answer: AnswerValue): Contribution {
+  if (answer.kind === "skip") return {};
   validateKind(question, answer);
   const contribution: Contribution = {};
 
@@ -193,10 +214,32 @@ export function scoreAssessment(
 
   const rawScores: Record<string, number> = {};
   const ranges: Record<string, ScoreRange> = {};
+  const evidenceByDimension: AssessmentScore["evidenceByDimension"] = {};
+  let skippedCount = 0;
 
   for (const question of questions) {
     const answer = answersById.get(question.id);
     if (!answer) throw new Error(`Missing answer for ${question.id}`);
+    const dimensions = questionDimensions(question);
+
+    for (const dimension of dimensions) {
+      const evidence = evidenceByDimension[dimension] ?? {
+        answered: 0,
+        skipped: 0,
+      };
+      if (answer.value.kind === "skip") {
+        evidence.skipped += 1;
+      } else {
+        evidence.answered += 1;
+      }
+      evidenceByDimension[dimension] = evidence;
+    }
+
+    // 跳过的题不参与计分，也不计入理论区间，避免拉低正常作答题的标准化分数
+    if (answer.value.kind === "skip") {
+      skippedCount += 1;
+      continue;
+    }
 
     const contribution = scoreQuestion(question, answer.value);
     const localRanges = questionRanges(question);
@@ -225,5 +268,13 @@ export function scoreAssessment(
     }),
   );
 
-  return { level, rawScores, ranges, normalizedScores };
+  return {
+    level,
+    rawScores,
+    ranges,
+    normalizedScores,
+    answeredCount: questions.length - skippedCount,
+    skippedCount,
+    evidenceByDimension,
+  };
 }

@@ -1,15 +1,17 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { QuestionEngine } from '@/components/test/QuestionEngine';
+import { ConsentGate } from '@/components/test/ConsentGate';
 import { isLevelReady } from '@/lib/questions';
 import type { Level } from '@/lib/questions/types';
 
 function TestContent() {
   const searchParams = useSearchParams();
   const level = searchParams.get('level') as Level | null;
+  const [consented, setConsented] = useState(false);
 
   if (!level || !['L1', 'L2', 'L3', 'L4'].includes(level)) {
     return (
@@ -29,6 +31,10 @@ function TestContent() {
         </div>
       </div>
     );
+  }
+
+  if (!consented) {
+    return <ConsentGate level={level} onConsent={() => setConsented(true)} />;
   }
 
   return <QuestionEngine level={level} />;

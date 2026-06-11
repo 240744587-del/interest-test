@@ -64,9 +64,11 @@ export function QuestionEngine({ level }: Props) {
         return next;
       });
 
-      // 自动前进：binary/scenario/likert 选完后短暂延迟自动到下一题
+      // 自动前进：binary/scenario/likert 选完后短暂延迟自动到下一题；跳过任何题型都自动前进
       const autoTypes = ['binary', 'scenario', 'likert'];
-      if (autoTypes.includes(question.type) && currentIndex < total - 1) {
+      const shouldAutoAdvance =
+        value.kind === 'skip' || autoTypes.includes(question.type);
+      if (shouldAutoAdvance && currentIndex < total - 1) {
         if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
         autoAdvanceTimer.current = setTimeout(() => {
           goNext();
@@ -115,6 +117,7 @@ export function QuestionEngine({ level }: Props) {
   const isLastQuestion = currentIndex === total - 1;
   const allAnswered = answers.size === total;
   const hasCurrentAnswer = answers.has(question?.id);
+  const isSkipped = currentAnswer?.value.kind === 'skip';
   const dimInfo = dimensionLabels[question?.dimension] ?? { label: '', color: 'bg-gray-100 text-gray-600' };
 
   const renderQuestion = (q: Question) => {
@@ -171,8 +174,8 @@ export function QuestionEngine({ level }: Props) {
         </div>
       </div>
 
-      {/* 题目区域 */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-lg mx-auto w-full">
+      {/* 题目区域 — overflow-x-hidden 防止滑入动画期间撑出横向滚动 */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-lg mx-auto w-full overflow-x-hidden">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={question.id}
@@ -202,6 +205,20 @@ export function QuestionEngine({ level }: Props) {
 
             {/* 题目选项 */}
             {renderQuestion(question)}
+
+            {/* 不确定跳过：诚实回答比硬选更有价值 */}
+            <button
+              onClick={() => handleSelect({ kind: 'skip' })}
+              className={`
+                w-full py-2.5 rounded-xl text-sm transition-all border border-dashed
+                ${isSkipped
+                  ? 'border-blue-300 bg-blue-50 text-blue-600 font-medium'
+                  : 'border-gray-200 text-gray-400 hover:text-gray-500 hover:border-gray-300'
+                }
+              `}
+            >
+              {isSkipped ? '✓ 已跳过这道题' : '🤔 不知道 / 没经历过 / 都不像'}
+            </button>
           </motion.div>
         </AnimatePresence>
       </div>

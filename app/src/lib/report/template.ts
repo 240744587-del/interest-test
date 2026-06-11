@@ -48,6 +48,23 @@ export function generateTemplateReport(level: Level, summary: ScoreResult): AIRe
   const isMinor = level !== 'L4';
   const code = summary.riasec.code;
   const topTypes = code.split('').slice(0, 3);
+  const lowEvidence = summary.consistencyFlags.includes('low-evidence');
+
+  // ---- 低证据保护：不生成虚假精准结论 ----
+  if (lowEvidence) {
+    return {
+      overview: `这次${label}测评中，你对不少题目选择了"不知道 / 没经历过"——这本身就是一个诚实而有价值的回答。\n\n它说明你目前处于「开放探索期」：很多方向你还没有真实体验过，所以暂时没有足够的依据来判断喜欢或不喜欢。这不代表你没有兴趣或能力，只代表此刻还缺少亲身经历。\n\n在这个阶段，最有价值的不是想出一个答案，而是去获得几次不同类型的真实体验。`,
+      interestInterpretation: `由于本次作答中有效信号较少，我们不会给出精确的兴趣类型结论——基于不足的证据下结论，反而可能误导你。\n\n你可以把已作答部分中相对突出的方向当作"值得先试试"的线索，而不是"这就是我的类型"的定论。`,
+      abilityInterpretation: `能力倾向需要在真实活动中才能展现。目前的数据还不足以描绘你的能力图谱，这很正常——许多能力只有在尝试过相关活动后才会被自己发现。`,
+      cognitiveInterpretation: `认知风格的判断同样需要更充分的作答数据。建议在有了更多生活和学习体验之后再来测一次，结果会更有参考价值。`,
+      driveInterpretation: `驱动力是在真实投入中逐渐清晰的。留意未来几周里哪些事情让你愿意主动花时间，那就是驱动力的真实信号。`,
+      explorationSuggestions: `接下来更适合你的不是"选方向"，而是"攒体验"：\n\n1. 从科学实验、艺术创作、组织活动、帮助他人、动手制作中各选一样，每样试一次\n2. 不需要做得好，只需要记录：做的过程中你是投入还是煎熬？\n3. 体验不必正式——看一场展览、帮家里修一件东西、组织一次小聚会都算`,
+      actionSteps: `建议的节奏：\n\n1. 未来 2-4 周，完成 2-3 次不同类型的新体验\n2. 每次体验后用一句话记录感受\n3. 有了这些真实经历后，重新做一次测评——那时的结果会建立在证据之上，而不是想象之上`,
+      guardianNote: isMinor
+        ? `致家长/老师：\n\n孩子在本次测评中选择了较多"不知道 / 没经历过"，请不要把这理解为"没想法"或"不配合"——这恰恰是诚实的表现。\n\n它真实地反映了孩子当前的体验广度。此阶段最有帮助的支持是：提供多样化的体验机会（活动、场馆、项目），观察孩子在哪些活动中自然投入，而不是要求孩子"想清楚自己喜欢什么"。\n\n本报告不构成任何心理诊断或专业评估意见。`
+        : undefined,
+    };
+  }
 
   // ---- 总述 ----
   const intelligenceDim = summary.dimensions.find((d) => d.key === 'intelligence');

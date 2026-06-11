@@ -121,6 +121,47 @@ describe("scoring pipeline end-to-end", () => {
     );
   });
 
+  it.each(levels)("%s: skipped questions do not distort scores", (level) => {
+    const questions = questionBanks[level as Level];
+    const fullAnswers = answerAll(questions);
+
+    // 跳过 1/4 的题（低于低证据阈值 1/3）
+    const skipEvery4 = fullAnswers.map((answer, index) =>
+      index % 4 === 0
+        ? { questionId: answer.questionId, value: { kind: "skip" as const } }
+        : answer,
+    );
+
+    const score = scoreAssessment(level as Level, skipEvery4, questions);
+    expect(score.skippedCount).toBe(
+      skipEvery4.filter((a) => a.value.kind === "skip").length,
+    );
+    expect(score.answeredCount + score.skippedCount).toBe(questions.length);
+
+    const result = buildScoreResult(score);
+    expect(result.consistencyFlags).not.toContain("low-evidence");
+    // 已作答部分仍产生有效分数
+    const subScores = result.dimensions.flatMap((d) =>
+      d.subScores.map((s) => s.score),
+    );
+    expect(subScores.some((s) => s > 0)).toBe(true);
+  });
+
+  it.each(levels)("%s: heavy skipping triggers low-evidence protection", (level) => {
+    const questions = questionBanks[level as Level];
+    // 跳过一半的题（高于 1/3 阈值）
+    const halfSkipped = answerAll(questions).map((answer, index) =>
+      index % 2 === 0
+        ? { questionId: answer.questionId, value: { kind: "skip" as const } }
+        : answer,
+    );
+
+    const result = buildScoreResult(
+      scoreAssessment(level as Level, halfSkipped, questions),
+    );
+    expect(result.consistencyFlags).toContain("low-evidence");
+  });
+
   it("question bank contains no ranking questions (UI does not support them)", () => {
     for (const level of levels) {
       const rankingQuestions = questionBanks[level as Level].filter(
