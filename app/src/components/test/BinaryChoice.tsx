@@ -25,14 +25,14 @@ export function BinaryChoice({ question, selected, onSelect }: Props) {
               w-full text-left px-5 py-4 rounded-2xl border-2 transition-all duration-200
               text-base leading-relaxed
               ${isSelected
-                ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-md scale-[1.02]'
-                : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm text-gray-700'
+                ? 'border-[#66784e] bg-[#edf1df] text-[#31402f] shadow-md scale-[1.02]'
+                : 'border-[#ded7c7] bg-[#fffdf8] hover:border-[#aab58e] hover:shadow-sm text-gray-700'
               }
             `}
           >
             <span className={`
               inline-flex items-center justify-center w-7 h-7 rounded-full mr-3 text-sm font-bold
-              ${isSelected ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}
+              ${isSelected ? 'bg-[#66784e] text-white' : 'bg-[#f0ece2] text-gray-500'}
             `}>
               {String.fromCharCode(65 + i)}
             </span>

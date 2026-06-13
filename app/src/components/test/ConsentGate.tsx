@@ -26,9 +26,12 @@ export function ConsentGate({ level, onConsent }: Props) {
   const meta = levelMeta[level];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30 flex flex-col">
-      <div className="max-w-lg mx-auto px-5 pt-8 w-full">
-        <Link href="/" className="text-xs text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1">
+    <div className="warm-field-soft min-h-screen flex flex-col">
+      <div className="max-w-lg mx-auto px-5 pt-8 w-full flex items-center justify-between">
+        <Link href="/" className="brand-mark-sm">
+          向野
+        </Link>
+        <Link href="/start" className="text-xs text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
@@ -40,7 +43,7 @@ export function ConsentGate({ level, onConsent }: Props) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-lg w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-7 space-y-6"
+          className="field-surface max-w-lg w-full rounded-3xl border p-7 space-y-6"
         >
           <div className="text-center space-y-2">
             <span className="text-4xl block">🌱</span>
@@ -50,7 +53,7 @@ export function ConsentGate({ level, onConsent }: Props) {
 
           <ul className="space-y-3 text-sm">
             <li className="flex gap-3">
-              <span className="shrink-0 px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-xs font-medium h-fit mt-0.5">可以跳过</span>
+              <span className="field-accent-bg shrink-0 px-2 py-0.5 rounded-md border text-xs font-medium h-fit mt-0.5">可以跳过</span>
               <span className="text-gray-600">&ldquo;不知道、没经历过、都不像&rdquo;都是有效答案，不需要硬选</span>
             </li>
             <li className="flex gap-3">
@@ -75,7 +78,7 @@ export function ConsentGate({ level, onConsent }: Props) {
                     type="checkbox"
                     checked={guardian}
                     onChange={(e) => setGuardian(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-blue-500"
+                    className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-[#66784e]"
                   />
                   <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
                     <strong className="text-gray-800">监护人同意</strong> — 我了解这是兴趣探索工具，不是诊断或选拔依据，并同意孩子自愿参与
@@ -86,7 +89,7 @@ export function ConsentGate({ level, onConsent }: Props) {
                     type="checkbox"
                     checked={assent}
                     onChange={(e) => setAssent(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-blue-500"
+                    className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-[#66784e]"
                   />
                   <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
                     <strong className="text-gray-800">我愿意参与</strong>（孩子本人勾选）— 我知道随时可以停下来，也不需要选&ldquo;大人喜欢的答案&rdquo;
@@ -99,7 +102,7 @@ export function ConsentGate({ level, onConsent }: Props) {
                   type="checkbox"
                   checked={self}
                   onChange={(e) => setSelf(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-blue-500"
+                  className="mt-0.5 w-4 h-4 rounded border-gray-300 accent-[#66784e]"
                 />
                 <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
                   <strong className="text-gray-800">我理解并自愿参与</strong> — 我知道结果不构成心理诊断、升学或职业决策意见
@@ -111,7 +114,7 @@ export function ConsentGate({ level, onConsent }: Props) {
           <button
             onClick={onConsent}
             disabled={!canStart}
-            className="w-full py-3 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200/50 active:scale-[0.98]"
+            className="field-primary w-full py-3 rounded-xl text-sm font-medium disabled:cursor-not-allowed transition-all active:scale-[0.98]"
           >
             进入探索 →
           </button>

@@ -1,218 +1,266 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { levelMeta, isLevelReady, getQuestionBank } from '@/lib/questions';
-import type { Level } from '@/lib/questions/types';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowRight,
+  Compass,
+  ShieldCheck,
+  Sprout,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const levelOrder: Level[] = ['L1', 'L2', 'L3', 'L4'];
+/** 滚过首屏后出现的悬浮 CTA */
+function FloatingCTA() {
+  const [show, setShow] = useState(false);
 
-const features = [
-  {
-    icon: '🔬',
-    title: '六大理论支撑',
-    desc: '融合霍兰德、荣格、加德纳、舒伯、施恩、Csikszentmihalyi 六大经典理论体系',
-  },
-  {
-    icon: '🎯',
-    title: '六维度深度测评',
-    desc: '心理能量 · 多元智能 · 兴趣类型 · 核心驱动力 · 认知风格 · 生涯准备度',
-  },
-  {
-    icon: '🤖',
-    title: 'AI 个性化解读',
-    desc: '可选 AI 深度分析，基于匿名汇总分数生成，不发送任何个人信息',
-  },
-  {
-    icon: '🔒',
-    title: '隐私优先',
-    desc: '无需注册、不收集身份信息、答案仅用于当次计算，完成即销毁',
-  },
-];
-
-export default function Home() {
-  const router = useRouter();
-
-  const handleSelect = (level: Level) => {
-    if (!isLevelReady(level)) return;
-    router.push(`/test?level=${level}`);
-  };
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 640);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30">
-      {/* Hero */}
-      <div className="max-w-2xl mx-auto px-5 pt-14 sm:pt-20 pb-8 text-center">
+    <AnimatePresence>
+      {show && (
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.25 }}
+          className="fixed bottom-5 right-5 z-30"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-xs font-medium mb-6 border border-blue-100">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-            免费 · 匿名 · 无需注册
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-            🌾 向野
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 mb-3 leading-relaxed font-medium">
-            成长方向探索
-          </p>
-          <p className="text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
-            发现你的兴趣种子和能力倾向——了解自己，才能找到属于自己的路。
-          </p>
+          <Link
+            href="/start"
+            className="field-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium shadow-xl transition-transform hover:-translate-y-0.5"
+          >
+            开始测评
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </motion.div>
-      </div>
+      )}
+    </AnimatePresence>
+  );
+}
+import type { CSSProperties } from 'react';
 
-      {/* 特色亮点 */}
-      <div className="max-w-2xl mx-auto px-5 pb-10">
-        <div className="grid grid-cols-2 gap-3">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.08 }}
-              className="bg-white/70 backdrop-blur rounded-xl p-4 border border-gray-100/80"
-            >
-              <span className="text-2xl mb-2 block">{f.icon}</span>
-              <h3 className="text-sm font-semibold text-gray-800 mb-1">{f.title}</h3>
-              <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+const stages = [
+  ['L1', '小学', '发现兴趣种子'],
+  ['L2', '初中', '认识能力倾向'],
+  ['L3', '高中', '探索发展方向'],
+  ['L4', '成人', '检视学习与职业'],
+];
 
-      {/* 年龄选择 */}
-      <div className="max-w-2xl mx-auto px-5 pb-12">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-center mb-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">选择教育阶段</h2>
-          <p className="text-xs text-gray-400">不同阶段，不同题目风格，更贴合你的实际体验</p>
-        </motion.div>
+const bloomNodes = [
+  { key: 'energy', label: '心理能量', delay: '.4s' },
+  { key: 'ability', label: '能力倾向', delay: '.55s' },
+  { key: 'interest', label: '兴趣类型', delay: '.7s' },
+  { key: 'drive', label: '核心驱动力', delay: '.85s' },
+  { key: 'cognition', label: '认知风格', delay: '1s' },
+  { key: 'readiness', label: '发展准备度', delay: '1.15s' },
+];
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {levelOrder.map((level, i) => {
-            const meta = levelMeta[level];
-            const ready = isLevelReady(level);
-            const bank = getQuestionBank(level);
-            const questionCount = bank.questions.length;
-            const minutes = bank.estimatedMinutes;
+const sectionMotion = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.25 },
+  transition: { duration: 0.65 },
+};
 
-            return (
-              <motion.button
-                key={level}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                onClick={() => handleSelect(level)}
-                disabled={!ready}
-                className={`
-                  relative overflow-hidden rounded-2xl p-6 text-left transition-all duration-300
-                  ${ready
-                    ? 'bg-white border border-gray-200/80 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-100/40 cursor-pointer group hover:-translate-y-0.5'
-                    : 'bg-gray-50 border border-dashed border-gray-200 cursor-not-allowed opacity-60'
-                  }
-                `}
+export default function Home() {
+  return (
+    <main className="marketing-page min-h-screen">
+      <section className="hero-field relative flex min-h-[100svh] items-center overflow-hidden px-5 py-28">
+        <div className="hero-field__inner mx-auto w-full max-w-6xl">
+          <motion.div
+            className="hero-field__copy relative z-10"
+          >
+            <h1 className="brand-hero" aria-label="向野">
+              <span className="brand-hero__main">
+                <span className="brand-hero__logo-crop" aria-hidden="true">
+                  <Image
+                    className="brand-hero__logo"
+                    src="/brand/xiangye-logo-d-transparent.png"
+                    alt=""
+                    fill
+                    sizes="104px"
+                    priority
+                  />
+                </span>
+                <span>向野</span>
+              </span>
+            </h1>
+            <p className="hero-slogan mt-9 w-fit max-w-[38rem] font-heading-serif font-bold leading-[1.3] text-[#3a4a38]">
+              从兴趣出发，向辽阔处生长
+            </p>
+            <p className="mt-5 max-w-[31rem] text-base leading-8 text-[#687267] sm:text-lg">
+              面向不同成长阶段的兴趣探索工具，帮助你更好地认识自己，发现值得尝试的成长方向。
+            </p>
+            <div className="hero-primary-action mt-8 flex w-full max-w-96 justify-center">
+              <Link
+                href="/start"
+                className="field-primary inline-flex min-w-44 items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-medium transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
               >
-                {/* 装饰渐变 */}
-                {ready && (
-                  <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${meta.color} opacity-[0.07] rounded-bl-full transition-opacity group-hover:opacity-[0.12]`} />
-                )}
-
-                <div className="relative">
-                  <span className="text-3xl mb-3 block">{meta.emoji}</span>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    {meta.label}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">{meta.desc}</p>
-
-                  {ready ? (
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-blue-500 font-medium group-hover:text-blue-600 transition-colors">
-                        开始测评 →
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {questionCount} 题 · 约 {minutes} 分钟
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs text-gray-400">即将开放</span>
-                  )}
-                </div>
-              </motion.button>
-            );
-          })}
+                开始测评
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* 底部说明 */}
-      <div className="max-w-2xl mx-auto px-5 pb-10">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="bg-amber-50/60 border border-amber-200/60 rounded-2xl p-5 text-sm text-amber-800 space-y-2.5"
-        >
-          <p className="font-medium flex items-center gap-1.5">
-            <span className="text-base">📋</span> 使用前请了解：
-          </p>
-          <ul className="space-y-1.5 text-xs text-amber-700/80 leading-relaxed pl-1">
-            <li className="flex items-start gap-2">
-              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
-              <span>这是兴趣探索工具，不是专业诊断或升学决策依据</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
-              <span>不要求填写姓名、学校等身份信息</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
-              <span>答案只用于当次评分，不建立个人档案或样本库</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
-              <span>AI 解读完全可选；仅在主动点击后，匿名汇总分会发送给第三方 AI 服务</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-amber-400 mt-1.5 shrink-0">•</span>
-              <span>小学生和初中生请在家长知情下使用</span>
-            </li>
-          </ul>
-        </motion.div>
-      </div>
-
-      {/* 理论基础 */}
-      <div className="max-w-2xl mx-auto px-5 pb-12">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="text-center space-y-3"
-        >
-          <p className="text-xs text-gray-300 font-medium tracking-wider uppercase">理论基础</p>
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-gray-400">
-            <span>Holland RIASEC</span>
-            <span className="text-gray-200">·</span>
-            <span>Jung 心理类型</span>
-            <span className="text-gray-200">·</span>
-            <span>Gardner 多元智能</span>
-            <span className="text-gray-200">·</span>
-            <span>Super 生涯发展</span>
-            <span className="text-gray-200">·</span>
-            <span>Schein 职业锚</span>
-            <span className="text-gray-200">·</span>
-            <span>Flow 心流理论</span>
+      <section className="story-section story-section--cream">
+        <motion.div {...sectionMotion} className="story-grid">
+          <div>
+            <p className="story-kicker">01 · 多维探索</p>
+            <h2 className="story-title">从多个角度，看见成长线索</h2>
+            <p className="story-copy">
+              兴趣不是一个简单标签。测评从心理能量、能力倾向、兴趣类型、
+              核心驱动力、认知风格与发展准备度六个维度，拼出更完整的探索画像。
+            </p>
+            <p className="story-note">
+              参考霍兰德、荣格、加德纳、舒伯、施恩与心流等经典理论。
+            </p>
+          </div>
+          <div className="growth-map growth-map--dimensions" aria-hidden="true">
+            <div className="growth-bloom__halo" />
+            <div className="growth-bloom__halo growth-bloom__halo--inner" />
+            <svg className="growth-bloom__trail" viewBox="0 0 400 400">
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--one" d="M200 200 C200 158 200 117 200 72" />
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--two" d="M200 200 C235 178 278 150 320 122" />
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--three" d="M200 200 C240 218 281 246 321 278" />
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--four" d="M200 200 C200 242 200 285 200 328" />
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--five" d="M200 200 C162 220 119 247 79 278" />
+              <path className="growth-bloom__trail-path growth-bloom__trail-path--six" d="M200 200 C161 179 119 150 80 122" />
+            </svg>
+            <div className="growth-bloom__seed">
+              <Sprout className="h-7 w-7" />
+              <span>成长线索</span>
+            </div>
+            {bloomNodes.map((node) => (
+              <div
+                key={node.key}
+                className={`growth-bloom__emergence growth-bloom__emergence--${node.key}`}
+                style={{ '--emerge-delay': node.delay } as CSSProperties}
+              >
+                <div className={`growth-bloom__node growth-bloom__node--${node.key}`}>
+                  <strong>{node.label}</strong>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
-      </div>
+      </section>
 
-      <footer className="text-center text-xs text-gray-300 pb-8">
-        向野 · 成长方向探索工具 · 结果反映当前回答倾向，建议通过真实活动验证
+      <section className="story-section story-section--sage">
+        <motion.div {...sectionMotion} className="story-grid story-grid--reverse">
+          <div>
+            <p className="story-kicker">02 · 分阶段适配</p>
+            <h2 className="story-title">不同阶段，不同探索方式</h2>
+            <p className="story-copy">
+              小学生、初中生、高中生与成人面对的生活经验不同，不该回答同一套问题。
+              向野按成长阶段调整题目表达、情境与解读重点，让回答更贴近真实体验。
+            </p>
+          </div>
+          <div className="feature-visual stage-path">
+            {stages.map(([level, label, description], index) => (
+              <div
+                key={level}
+                className="stage-step"
+                style={{ '--stage-offset': `${index * 8}%` } as CSSProperties}
+              >
+                <span className="stage-step__level">{level}</span>
+                <div>
+                  <strong>{label}</strong>
+                  <p>{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="story-section story-section--paper">
+        <motion.div {...sectionMotion} className="story-grid">
+          <div>
+            <p className="story-kicker">03 · 开放探索</p>
+            <h2 className="story-title">结果是线索，不是标签</h2>
+            <p className="story-copy">
+              报告反映的是你此刻的回答倾向，而不是永久不变的人格结论。
+              它提供可以尝试的方向，真正的答案仍需要在学习、活动和工作中慢慢验证。
+            </p>
+          </div>
+          <div className="feature-visual snapshot-card">
+            <div className="snapshot-card__top">
+              <span>此刻的探索画像</span>
+              <Compass className="h-5 w-5" />
+            </div>
+            <div className="snapshot-card__line snapshot-card__line--wide" />
+            <div className="snapshot-card__line" />
+            <div className="snapshot-card__tags">
+              <span>值得尝试</span>
+              <span>继续观察</span>
+              <span>真实体验</span>
+            </div>
+            <p>不是定论，而是一张继续出发的地图。</p>
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="story-section story-section--olive">
+        <motion.div {...sectionMotion} className="story-grid story-grid--reverse">
+          <div>
+            <p className="story-kicker story-kicker--light">04 · 隐私边界</p>
+            <h2 className="story-title story-title--light">隐私优先，由你决定</h2>
+            <p className="story-copy story-copy--light">
+              无需填写姓名、学校或单位。答案只在本次测评中计算，不建立个人档案或样本库。
+              AI 深度解读完全可选，只有主动点击时才发送匿名汇总分数。
+            </p>
+          </div>
+          <div className="privacy-panel">
+            <ShieldCheck className="h-9 w-9" />
+            <div className="privacy-panel__row">
+              <span>身份信息</span>
+              <strong>不收集</strong>
+            </div>
+            <div className="privacy-panel__row">
+              <span>作答结果</span>
+              <strong>不留存</strong>
+            </div>
+            <div className="privacy-panel__row">
+              <span>AI 解读</span>
+              <strong>由你选择</strong>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="final-cta">
+        <motion.div {...sectionMotion} className="mx-auto max-w-3xl text-center">
+          <p className="brand-wordmark text-5xl sm:text-6xl">向野</p>
+          <h2 className="mt-8 font-heading-serif text-3xl font-bold text-[#2c3b2f] sm:text-5xl">
+            下一步，从认识自己开始
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-base leading-8 text-[#70796d]">
+            选择与你当前阶段相符的题目，诚实回答此刻的感受。
+          </p>
+          <Link
+            href="/start"
+            className="field-primary mt-9 inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-medium transition-transform hover:-translate-y-0.5"
+          >
+            开始测评
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </motion.div>
+      </section>
+
+      <footer className="bg-[#f3eddf] px-5 py-7 text-center text-xs text-[#8a9086]">
+        向野 · 兴趣与成长方向探索工具 · 结果反映当前回答倾向
       </footer>
+
+      <FloatingCTA />
     </main>
   );
 }

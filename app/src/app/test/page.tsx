@@ -15,19 +15,24 @@ function TestContent() {
 
   if (!level || !['L1', 'L2', 'L3', 'L4'].includes(level)) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        <p>请从首页选择教育阶段开始测评</p>
+      <div className="warm-field-soft min-h-screen flex items-center justify-center text-gray-500">
+        <div className="text-center space-y-3">
+          <p>请先选择教育阶段开始测评</p>
+          <Link href="/start" className="field-accent text-sm hover:underline">
+            前往选择 →
+          </Link>
+        </div>
       </div>
     );
   }
 
   if (!isLevelReady(level)) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
+      <div className="warm-field-soft min-h-screen flex items-center justify-center text-gray-500">
         <div className="text-center space-y-3">
           <p className="text-4xl">🚧</p>
           <p>{level} 题库正在开发中，敬请期待</p>
-          <Link href="/" className="text-blue-500 text-sm hover:underline">← 返回首页</Link>
+          <Link href="/start" className="field-accent text-sm hover:underline">← 重新选择</Link>
         </div>
       </div>
     );
@@ -44,8 +49,8 @@ export default function TestPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" />
+        <div className="warm-field-soft min-h-screen flex items-center justify-center">
+          <div className="animate-spin w-8 h-8 border-2 border-[#66784e] border-t-transparent rounded-full" />
         </div>
       }
     >

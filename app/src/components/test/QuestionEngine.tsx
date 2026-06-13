@@ -150,22 +150,28 @@ export function QuestionEngine({ level }: Props) {
   if (!question) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+    <div className="warm-field-soft min-h-screen flex flex-col">
       {/* 顶部进度条 */}
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-gray-100/80">
+      <div className="field-chrome sticky top-0 z-10 border-b">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <Link href="/" className="hover:text-gray-600 transition-colors flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              {meta.emoji} {meta.label}
-            </Link>
+            <div className="flex items-center gap-2.5">
+              <Link href="/" className="brand-mark-sm !text-sm">
+                向野
+              </Link>
+              <span className="w-px h-3.5 bg-gray-200" />
+              <Link href="/start" className="hover:text-gray-600 transition-colors flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                {meta.emoji} {meta.label}
+              </Link>
+            </div>
             <span className="tabular-nums font-medium text-gray-500">{currentIndex + 1} / {total}</span>
           </div>
           <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
+              className="h-full bg-gradient-to-r from-[#8a9a68] to-[#52663e] rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -184,7 +190,7 @@ export function QuestionEngine({ level }: Props) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction * -50 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="w-full space-y-6"
+            className="w-full space-y-6 question-card"
           >
             {/* 维度标签 */}
             <div className="flex items-center gap-2">
@@ -212,7 +218,7 @@ export function QuestionEngine({ level }: Props) {
               className={`
                 w-full py-2.5 rounded-xl text-sm transition-all border border-dashed
                 ${isSkipped
-                  ? 'border-blue-300 bg-blue-50 text-blue-600 font-medium'
+                  ? 'border-[#9dad7e] bg-[#edf1df] text-[#53663f] font-medium'
                   : 'border-gray-200 text-gray-400 hover:text-gray-500 hover:border-gray-300'
                 }
               `}
@@ -224,7 +230,7 @@ export function QuestionEngine({ level }: Props) {
       </div>
 
       {/* 底部导航 */}
-      <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-gray-100/80">
+      <div className="field-chrome sticky bottom-0 border-t">
         {submitError && (
           <p
             role="alert"
@@ -257,7 +263,7 @@ export function QuestionEngine({ level }: Props) {
                   }}
                   className={`
                     w-2 h-2 rounded-full transition-all
-                    ${isCurrent ? 'w-5 bg-blue-500' : answered ? 'bg-blue-300' : 'bg-gray-200'}
+                    ${isCurrent ? 'w-5 bg-[#5d7147]' : answered ? 'bg-[#aebc8e]' : 'bg-gray-200'}
                   `}
                   title={`第 ${idx + 1} 题`}
                 />
@@ -269,7 +275,7 @@ export function QuestionEngine({ level }: Props) {
             <button
               onClick={handleSubmit}
               disabled={!allAnswered || submitting}
-              className="px-6 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200/50 active:scale-95"
+              className="field-primary px-6 py-2.5 rounded-xl text-sm font-medium disabled:cursor-not-allowed transition-all active:scale-95"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">
@@ -284,7 +290,7 @@ export function QuestionEngine({ level }: Props) {
             <button
               onClick={goNext}
               disabled={!hasCurrentAnswer}
-              className="px-6 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
+              className="field-primary px-6 py-2.5 rounded-xl text-sm font-medium disabled:cursor-not-allowed transition-all active:scale-95"
             >
               下一题 →
             </button>

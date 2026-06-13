@@ -37,15 +37,15 @@ export function LikertScale({ question, selected, onSelect }: Props) {
                 className={`
                   flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 px-1 rounded-xl border-2 transition-all duration-200
                   ${isSelected
-                    ? 'border-blue-500 bg-blue-50 scale-[1.05] shadow-md shadow-blue-100'
-                    : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'
+                    ? 'border-[#66784e] bg-[#edf1df] scale-[1.05] shadow-md shadow-[#dfe6ca]'
+                    : 'border-[#e4ddcf] bg-[#fffdf8] hover:border-[#aab58e] hover:bg-[#faf7ef]'
                   }
                 `}
               >
                 <span className="text-xl sm:text-2xl">{emojis[val - 1]}</span>
                 <span className={`
                   text-[10px] sm:text-xs text-center leading-tight font-medium
-                  ${isSelected ? 'text-blue-600' : 'text-gray-400'}
+                  ${isSelected ? 'text-[#53663f]' : 'text-gray-400'}
                 `}>
                   {labels[val - 1]}
                 </span>
@@ -59,13 +59,13 @@ export function LikertScale({ question, selected, onSelect }: Props) {
           <div className="absolute inset-0 flex">
             {[0, 1, 2, 3, 4].map((i) => (
               <div key={i} className="flex-1 flex items-center justify-center">
-                <div className={`w-1.5 h-1.5 rounded-full ${selected === i + 1 ? 'bg-blue-500' : 'bg-gray-300'}`} />
+                <div className={`w-1.5 h-1.5 rounded-full ${selected === i + 1 ? 'bg-[#66784e]' : 'bg-gray-300'}`} />
               </div>
             ))}
           </div>
           {selected && (
             <motion.div
-              className="absolute top-0 h-full bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+              className="absolute top-0 h-full bg-gradient-to-r from-[#cbd5aa] to-[#829463] rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${((selected - 1) / 4) * 100}%` }}
               transition={{ duration: 0.3 }}

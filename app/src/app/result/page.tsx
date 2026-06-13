@@ -50,10 +50,10 @@ export default function ResultPage() {
 
   if (!result || !localReport) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="warm-field-soft min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-gray-500">没有找到本次测评结果，请重新开始</p>
-          <Link href="/" className="text-blue-500 text-sm hover:underline">
+          <Link href="/" className="field-accent text-sm hover:underline">
             ← 返回首页
           </Link>
         </div>
@@ -70,7 +70,7 @@ export default function ResultPage() {
   const showAIEnhancement = canRequestAIReport(result);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/20 pb-16">
+    <main className="warm-field-soft min-h-screen pb-16">
       {/* Header */}
       <div className="max-w-2xl mx-auto px-5 pt-10 pb-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
@@ -89,9 +89,9 @@ export default function ResultPage() {
               <span className="text-sm text-amber-700">🌱 开放探索期</span>
             </div>
           ) : (
-            <div className="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
+            <div className="field-accent-bg mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-xl border">
               <span className="text-sm text-gray-500">兴趣代码</span>
-              <span className="font-mono text-xl font-bold text-blue-600 tracking-wider">{result.riasec.code}</span>
+              <span className="font-mono text-xl font-bold text-[#53663f] tracking-wider">{result.riasec.code}</span>
             </div>
           )}
         </motion.div>
@@ -116,7 +116,7 @@ export default function ResultPage() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-700">想要更个性化的深度解读？</p>
+                <p className="text-sm font-medium text-gray-700">想看更贴近你的解读？</p>
                 <p className="text-xs text-gray-400">AI 将基于匿名汇总分数生成，不发送个人信息</p>
               </div>
               <button
@@ -133,7 +133,7 @@ export default function ResultPage() {
         {reportStatus.kind === 'loading' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center gap-3 py-6 no-print">
             <div className="w-5 h-5 border-2 border-violet-200 border-t-violet-500 rounded-full animate-spin" />
-            <span className="text-sm text-gray-500">AI 正在生成更深度的解读...</span>
+            <span className="text-sm text-gray-500">AI 正在解读你的结果…</span>
           </motion.div>
         )}
 
@@ -159,7 +159,7 @@ export default function ResultPage() {
             <svg className="w-3.5 h-3.5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
-            <span className="text-xs text-violet-600">已切换为 AI 深度解读版本</span>
+            <span className="text-xs text-violet-600">下面这份是 AI 写的解读</span>
           </motion.div>
         )}
 
@@ -168,7 +168,7 @@ export default function ResultPage() {
           <div className="border border-gray-100 rounded-2xl overflow-hidden no-print">
           <button
             onClick={() => setShowCharts((v) => !v)}
-            className="w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-between px-6 py-4 bg-[#fffdf8] hover:bg-[#faf7ef] transition-colors"
           >
             <span className="text-sm font-medium text-gray-700">📊 查看详细数据图表</span>
             <motion.svg
@@ -230,7 +230,7 @@ export default function ResultPage() {
               clearResult();
               window.location.href = `/test?level=${result.level}`;
             }}
-            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-200/50 active:scale-95"
+            className="field-primary px-5 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95"
           >
             重新测评
           </button>
@@ -267,7 +267,7 @@ function ReportSections({ report }: { report: AIReport }) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + i * 0.06 }}
-            className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm"
+            className="field-surface rounded-2xl p-6 border"
           >
             <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
               <span>{icon}</span>{title}
