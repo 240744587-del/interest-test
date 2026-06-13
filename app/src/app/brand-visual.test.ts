@@ -80,9 +80,23 @@ describe('homepage brand treatment', () => {
     expect(globalStyles).toContain('background-size: cover;');
   });
 
+  it('centers the mobile hero and provides an accessible scroll cue', () => {
+    expect(homepageSource).toContain('href="#growth-clues"');
+    expect(homepageSource).toContain('下滑了解更多');
+    expect(homepageSource).toContain('className="hero-scroll-cue"');
+    expect(homepageSource).toContain('id="growth-clues"');
+    expect(globalStyles).toContain('.hero-scroll-cue');
+    expect(globalStyles).toContain('@keyframes hero-scroll-cue');
+    expect(globalStyles).toContain('text-align: center;');
+    expect(globalStyles).toContain('align-items: center;');
+    expect(globalStyles).toContain(
+      '@media (prefers-reduced-motion: reduce)',
+    );
+  });
+
   it('moves the growth visual to the second screen with six dimensions', () => {
     const heroEnd = homepageSource.indexOf(
-      '<section className="story-section story-section--cream">',
+      '<section id="growth-clues" className="story-section story-section--cream">',
     );
     const growthMap = homepageSource.indexOf(
       'className="growth-map growth-map--dimensions"',

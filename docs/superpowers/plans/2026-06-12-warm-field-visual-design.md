@@ -87,3 +87,16 @@
 - [ ] Move the existing L1-L4 stage cards to `/start`, preserving routes, counts, and estimated times.
 - [ ] Update invalid test-entry guidance to link to `/start`.
 - [ ] Browser-check homepage story rhythm, `/start`, and the transition into consent at desktop and mobile sizes.
+
+### Task 7: Center the mobile hero and add a scroll cue
+
+**Files:**
+- Modify: `app/src/app/brand-visual.test.ts`
+- Modify: `app/src/app/page.tsx`
+- Modify: `app/src/app/globals.css`
+
+- [x] Add failing assertions for the mobile-only scroll cue, second-screen anchor, centered mobile hero rules, and reduced-motion handling.
+- [x] Add a mobile-only “下滑了解更多” anchor with a downward icon.
+- [x] Center the hero copy at widths up to `480px` while retaining the desktop layout.
+- [x] Add a restrained vertical cue animation and disable it for reduced motion.
+- [x] Browser-check the first and second screens at `390 × 844`, then confirm the desktop hero remains left-aligned.

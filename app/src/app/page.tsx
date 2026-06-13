@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
+  ChevronsDown,
   Compass,
   ShieldCheck,
   Sprout,
@@ -95,7 +96,7 @@ export default function Home() {
             <p className="hero-slogan mt-9 w-fit max-w-[38rem] font-heading-serif font-bold leading-[1.3] text-[#3a4a38]">
               从兴趣出发，向辽阔处生长
             </p>
-            <p className="mt-5 max-w-[31rem] text-base leading-8 text-[#687267] sm:text-lg">
+            <p className="hero-description mt-5 max-w-[31rem] text-base leading-8 text-[#687267] sm:text-lg">
               面向不同成长阶段的兴趣探索工具，帮助你更好地认识自己，发现值得尝试的成长方向。
             </p>
             <div className="hero-primary-action mt-8 flex w-full max-w-96 justify-center">
@@ -109,9 +110,13 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+        <a href="#growth-clues" className="hero-scroll-cue">
+          <span>下滑了解更多</span>
+          <ChevronsDown className="h-5 w-5" aria-hidden="true" />
+        </a>
       </section>
 
-      <section className="story-section story-section--cream">
+      <section id="growth-clues" className="story-section story-section--cream">
         <motion.div {...sectionMotion} className="story-grid">
           <div>
             <p className="story-kicker">01 · 多维探索</p>

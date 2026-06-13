@@ -362,6 +362,23 @@
   width: min(100%, 34rem);
 }
 
+.hero-scroll-cue {
+  display: none;
+}
+
+@keyframes hero-scroll-cue {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(0.35rem);
+  }
+}
+
 /* 你的线索蓄力后，四个特质沿弧线从中心旋转生长出来。 */
 .growth-map {
   position: relative;
@@ -632,6 +649,10 @@
   .growth-bloom__trail-path,
   .growth-bloom__seed::after,
   .growth-bloom__node {
+    animation: none;
+  }
+
+  .hero-scroll-cue svg {
     animation: none;
   }
 
@@ -915,7 +936,7 @@
 
 @media (max-width: 480px) {
   .hero-field {
-    padding-top: 7.5rem;
+    padding: 5rem 1.25rem 6.5rem;
     background-position: 68% center;
   }
 
@@ -923,8 +944,54 @@
     background: rgb(255 248 230 / 72%);
   }
 
+  .hero-field__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-field__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .brand-hero {
+    align-items: center;
+  }
+
   .hero-slogan {
+    margin-inline: auto;
     font-size: clamp(1.3rem, 6.5vw, 1.5rem);
+  }
+
+  .hero-description,
+  .hero-primary-action {
+    margin-inline: auto;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: rgb(58 74 56 / 72%);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+    text-decoration: none;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .hero-scroll-cue svg {
+    animation: hero-scroll-cue 1.8s ease-in-out infinite;
   }
 
   .stage-step {
